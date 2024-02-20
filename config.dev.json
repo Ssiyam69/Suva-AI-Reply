@@ -83,11 +83,11 @@
   },
   "autoRefreshFbstate": true,
   "autoReloginWhenChangeAccount": false,
-  "autoRestartWhenListenMqttError": true,
+  "autoRestartWhenListenMqttError": false,
   "restartListenMqtt": {
-    "enable": true,
-    "timeRestart": 60000,
-    "delayAfterStopListening": 4000,
+    "disable": false,
+    "timeRestart": null,
+    "delayAfterStopListening": null,
     "logNoti": true,
     "notes": "the value of timeRestart and delayAfterStopListening is milisecond, You shouldn't edit this if you don't know what it is"
   },
