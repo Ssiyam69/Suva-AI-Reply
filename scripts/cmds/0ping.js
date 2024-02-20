@@ -16,15 +16,10 @@ module.exports = {
       en: "Use {p}ping to check the current ping of the bot's system."
     }
   },
-  onStart: async function ({ api, event }) {
-    const startTime = Date.now();
-    await api.sendMessage("Pinging...", event.threadID);
-    
-    api.listenMqtt(async (err, message) => {
-      if (message.type === "message" && message.senderID === api.getCurrentUserID() && message.threadID === event.threadID) {
-        const latency = Date.now() - startTime;
-        await api.sendMessage(`Pong: ${latency}ms 🏓`, event.threadID);
-      }
-    });
+  onStart: async function ({ api, event, args }) {
+    const timeStart = Date.now();
+    await api.sendMessage("🏓", event.threadID);
+    const ping = Date.now() - timeStart;
+    api.sendMessage(`Pong:${ping}ms;🏓`, event.threadID);
   }
 };
