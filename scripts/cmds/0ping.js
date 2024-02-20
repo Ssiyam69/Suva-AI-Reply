@@ -3,7 +3,7 @@ module.exports = {
     name: "ping",
     aliases: ["ms"],
     version: "1.0",
-    author: "@move_the_simp",
+    author: "Sandu",
     role: 0,
     shortDescription: {
       en: "Displays the current ping of the bot's system."
@@ -16,10 +16,15 @@ module.exports = {
       en: "Use {p}ping to check the current ping of the bot's system."
     }
   },
-  onStart: async function ({ api, event, args }) {
-    await api.markThreadAsRead(event.threadID); // Marking thread as read to simulate activity
-    const timeStart = Date.now();
-    const ping = Date.now() - timeStart;
-    api.sendMessage(`Pong: ${ping}ms 🏓`, event.threadID);
+  onStart: async function ({ api, event }) {
+    const startTime = Date.now();
+    await api.sendMessage("Pinging...", event.threadID);
+    
+    api.listenMqtt(async (err, message) => {
+      if (message.type === "message" && message.senderID === api.getCurrentUserID() && message.threadID === event.threadID) {
+        const latency = Date.now() - startTime;
+        await api.sendMessage(`Pong: ${latency}ms 🏓`, event.threadID);
+      }
+    });
   }
 };
