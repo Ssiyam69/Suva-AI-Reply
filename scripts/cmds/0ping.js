@@ -1,25 +1,24 @@
 module.exports = {
-    config: {
-        name: "ping",
-        version: "1.0",
-        author: "@move_the_simp",
-        countDown: 0,
-        role: 0,
-        shortDescription: {
-            en: "Check latency"
-        },
-        longDescription: {
-            en: "Check the latency of the bot"
-        },
-        category: "utility",
-        guide: {
-            en: "{pn}: Check the latency of the bot"
-        }
+  config: {
+    name: "ping",
+    aliases: ["ms"],
+    version: "1.0",
+    author: "Sandu",
+    role: 0,
+    shortDescription: {
+      en: "Displays the current ping of the bot's system."
     },
-
-    onStart: async function ({ message }) {
-        const sentMessage = await message.channel.send("🏓 Pong!");
-        const latency = sentMessage.createdTimestamp - message.createdTimestamp;
-        return sentMessage.edit(`🏓 Pong: ${latency}ms`);
+    longDescription: {
+      en: "Displays the current ping of the bot's system."
+    },
+    category: "System",
+    guide: {
+      en: "Use {p}ping to check the current ping of the bot's system."
     }
+  },
+  onStart: async function ({ api, event, args }) {
+    const timeStart = Date.now();
+    const ping = Date.now() - timeStart;
+    api.sendMessage(`Pong: ${ping}ms 🏓`, event.threadID);
+  }
 };
