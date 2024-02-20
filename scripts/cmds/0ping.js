@@ -19,6 +19,6 @@ module.exports = {
   onStart: async function ({ api, event, args }) {
     const timeStart = Date.now();
     const ping = Date.now() - timeStart;
-    api.sendMessage(`Pong: ${ping}ms 🏓`, event.threadID);
+    api.sendMessage(`🏓Pong: ${ping}ms`, event.threadID);
   }
 };
