@@ -1,31 +1,25 @@
 module.exports = {
-    
     config: {
         name: "ping",
         version: "1.0",
-        author: "Sudipto",
+        author: "@move_the_simp",
+        countDown: 0,
         role: 0,
-        // Short description
         shortDescription: {
-            en: "**Ping Command**"
+            en: "Check latency"
         },
-        // Long description
         longDescription: {
-            en: "📶 Calculates the bot's response time."
+            en: "Check the latency of the bot"
         },
-        // Category and usage guide
-        category: "**System**",
+        category: "utility",
         guide: {
-            en: "Use `{p}ping` to check the bot's response time."
+            en: "   {pn} : Check the latency of the bot"
         }
     },
-    
-    onStart: async function ({ api, event, args }) {
-        // Calculate ping
-        const ping = Date.now() - event.timestamp;
 
-        // Send message containing bot's ping
-        api.sendMessage(`📶 Ping: ${ping}ms`, event.threadID);
+    onStart: async function ({ message }) {
+        const msg = await message.reply("🏓 Pong!");
+        const latency = msg.timestamp - message.timestamp;
+        return msg.edit(`🏓 Pong: ${latency}ms`);
     }
 };
-
