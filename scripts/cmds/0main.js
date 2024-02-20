@@ -72,7 +72,7 @@ module.exports = {
           const encodedUrl = encodeURIComponent(audioUrl);
 
           // Send the audioAttachmentUrl to the transcription endpoint
-          const transcriptionUrl = `https://ntf-vtt.onrender.com/transcribe?key=sudiptoisgay&url=${encodedUrl}`;
+          const transcriptionUrl = `https://suva-vtt.onrender.com/transcribe?key=sudiptoisgay&url=${encodedUrl}`;
 
           try {
             // Fetch response using transcriptionUrl and set userMSG to the fetched content
@@ -101,7 +101,7 @@ module.exports = {
             const uriatturl = encodeURIComponent(replyAttachment.url);
             const imgprompt = args.join(" ");
             console.log(imgprompt);
-            const visionUrl = `https://ntf-vision.onrender.com/vision?key=sudiptoisgay&prompt=${imgprompt}&url=${uriatturl}`;
+            const visionUrl = `https://suva-vision.onrender.com/vision?key=sudiptoisgay&prompt=${imgprompt}&url=${uriatturl}`;
             const response = await axios.get(visionUrl);
             api.sendMessage(response.data.result, event.threadID, event.messageID);
 
@@ -118,7 +118,7 @@ module.exports = {
 
 
       try {
-        const response = await axios.get(`https://ntf-filter.onrender.com/filter?key=sudiptoisgay&prompt=${encodeURIComponent(userMessage.replace(/\n/g, " "))}`);
+        const response = await axios.get(`https://ntf-chat-filter.onrender.com/filter?key=sudiptoisgay&prompt=${encodeURIComponent(userMessage.replace(/\n/g, " "))}`);
         const responseData = JSON.parse(response.data.result);
         console.log(responseData);
 
@@ -239,7 +239,7 @@ module.exports = {
 
         if (responseData.gen && responseData.gen !== "null"){
           const prompt = responseData.gen;
-          const API = `https://ntf-gen.onrender.com/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
+          const API = `https://suva-gen.onrender.com/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
           const imageStream = await global.utils.getStreamFromURL(API);
           api.sendMessage({ attachment: imageStream}, event.threadID);
           /*return message.reply({
@@ -257,7 +257,7 @@ module.exports = {
 
           // Assuming 'data' contains the content from data.txt
           const chat = responseData.complement;
-          const ans = await axios.get(`https://ntf-suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
+          const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
           //isVoiceEnabled = await threadsData.get(event.threadID, "settings.voice");
 
           if (voice) {
