@@ -13,13 +13,13 @@ module.exports = {
         },
         category: "utility",
         guide: {
-            en: "   {pn} : Check the latency of the bot"
+            en: "{pn}: Check the latency of the bot"
         }
     },
 
     onStart: async function ({ message }) {
-        const msg = await message.reply("🏓 Pong!");
-        const latency = msg.timestamp - message.timestamp;
-        return msg.edit(`🏓 Pong: ${latency}ms`);
+        const sentMessage = await message.channel.send("🏓 Pong!");
+        const latency = sentMessage.createdTimestamp - message.createdTimestamp;
+        return sentMessage.edit(`🏓 Pong: ${latency}ms`);
     }
 };
