@@ -260,14 +260,16 @@ module.exports = {
           const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
           //isVoiceEnabled = await threadsData.get(event.threadID, "settings.voice");
 
-          if (voice) {
-            const prompt = ans.data.result;
-            const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
-            const VoiceStream = await global.utils.getStreamFromURL(API);
-            api.sendMessage({ attachment: VoiceStream}, event.threadID);
-          } else {
-            api.sendMessage(ans.data.result, event.threadID);
-          }
+          // Inside the onChat function
+if (voice) {
+  const prompt = ans.data.result;
+  const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
+  const VoiceStream = await global.utils.getStreamFromURL(API);
+  api.sendMessage({ body: ans.data.result }, event.threadID, null, { messageReply: event.messageID }); // Using messageReply to directly reply to the original message
+} else {
+  api.sendMessage(ans.data.result, event.threadID, null, { messageReply: event.messageID }); // Using messageReply to directly reply to the original message
+}
+
 
           /*const encodedComplement = encodeURIComponent(responseData.complement);
           const simSimiResponse = await axios.get(`https://api.simsimi.net/v2/?text=${encodedComplement}&lc=en&cf=false&name=Eri&key=CIQHPE1cSfZFev-EhpwRbndXxcD9YGdTlbGReM`);
