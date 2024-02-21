@@ -32,7 +32,7 @@ module.exports = {
     name: "art",
     version: "1.0",
     author: "SiAM",// Don't change 
-    countDown: 15,
+    countDown: 0,
     role: 0,
     shortDescription: "Turn yourself into an anime character!",
     longDescription: "Apply an anime-style filter to an image to turn it into an anime character.",
