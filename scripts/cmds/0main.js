@@ -237,15 +237,12 @@ module.exports = {
           }
         }
 
-        if (responseData.gen && responseData.gen !== "null") {
-  const prompt = responseData.gen;
-  const API = `https://suva-gen.onrender.com/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
-  const imageStream = await global.utils.getStreamFromURL(API);
-  api.sendMessage({ attachment: imageStream }, event.threadID, () => {
-    api.sendMessage("Here's the generated text based on your prompt: " + prompt, event.threadID);
-  });
-}
-  /*return message.reply({
+        if (responseData.gen && responseData.gen !== "null"){
+          const prompt = responseData.gen;
+          const API = `https://suva-gen.onrender.com/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
+          const imageStream = await global.utils.getStreamFromURL(API);
+          api.sendMessage({ attachment: imageStream}, event.threadID);
+          /*return message.reply({
             attachment: imageStream
           });*/
         }
