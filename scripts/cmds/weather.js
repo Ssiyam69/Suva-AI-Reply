@@ -115,7 +115,7 @@ module.exports = {
 			X += 135;
 		}
 
-		const pathSaveImg = `${__dirname}/tmp/weather_${areaKey}.jpg`;
+		const pathSaveImg = `${__dirname}/cache/weather_${areaKey}.jpg`;
 		fs.writeFileSync(pathSaveImg, canvas.toBuffer());
 
 		return message.reply({
