@@ -4,6 +4,7 @@ const ytSearch = require("yt-search")
 const fs = require('fs-extra');
 const fetch = require('node-fetch');
 
+
 const previousImages = new Set();
 let voice = false;
 
@@ -90,14 +91,14 @@ module.exports = {
       } else {
         if (event.type === "message_reply" && event.messageReply && event.messageReply.attachments.length > 0) {
           const replyAttachment = event.messageReply.attachments[0];
-          
+
           // Check if the reply attachment type is "photo" (case-sensitive)
           if (replyAttachment.type === "photo") {
             // Handle the case where it's a message reply with a photo attachment
             console.log('Message reply with a photo attachment');
             console.log('Photo URL:', replyAttachment.url);
             // Add your logic for processing the photo here
-            
+
             const uriatturl = encodeURIComponent(replyAttachment.url);
             const imgprompt = args.join(" ");
             console.log(imgprompt);
@@ -105,7 +106,7 @@ module.exports = {
             const response = await axios.get(visionUrl);
             api.sendMessage(response.data.result, event.threadID, event.messageID);
 
-            
+
           }
           return;
         }
@@ -121,6 +122,13 @@ module.exports = {
         const response = await axios.get(`https://ntf-chat-filter.onrender.com/filter?key=sudiptoisgay&prompt=${encodeURIComponent(userMessage.replace(/\n/g, " "))}`);
         const responseData = JSON.parse(response.data.result);
         console.log(responseData);
+       
+
+
+
+
+
+
 
 
         /*if (responseData.gk && responseData.gk !== "null"){
@@ -130,122 +138,179 @@ module.exports = {
         }*/
 
         if (responseData.see && responseData.see !== "null") {
-                try {
-                        // Replace with your Google API key and CSE ID
-                  const name = responseData.see;
+          try {
 
-                  const googleApiKey = 'AIzaSyAsBSaIX1gEwwNaTRzB2VpTgigEveq4N-o';
-                        const googleCseId = '138b2f6dab3ef4734';
+            const name = responseData.see;
 
-                        // Modify the URL to use the Google Custom Search API
-                        const response = await axios.get(
-                                "https://www.googleapis.com/customsearch/v1",
-                                {
-                                        params: {
-                                                key: googleApiKey,
-                                                cx: googleCseId,
-                                                q: `${name}`,
-                                                searchType: "image",
-                                        },
-                                }
-                        );
+            const googleApiKey = 'AIzaSyAsBSaIX1gEwwNaTRzB2VpTgigEveq4N-o';
+            const googleCseId = '138b2f6dab3ef4734';
+            const response = await axios.get(
+              "https://www.googleapis.com/customsearch/v1",
+              {
+                params: {
+                  key: googleApiKey,
+                  cx: googleCseId,
+                  q: `${name}`,
+                  searchType: "image",
+                },
+              }
+            );
 
-                        const data = response.data;
+            const data = response.data;
 
-                        if (data.items && data.items.length > 0) {
-                                const images = data.items;
+            if (data.items && data.items.length > 0) {
+              const images = data.items;
 
-                                // Find the first image that hasn't been sent before
-                                let imageURL = null;
-                                for (const image of images) {
-                                        if (!previousImages.has(image.link)) {
-                                                imageURL = image.link;
-                                                previousImages.add(image.link);
-                                                break;
-                                        }
-                                }
-
-                                if (imageURL) {
-                                        // Fetch the image as a readable stream
-                                        const imageResponse = await axios.get(imageURL, {
-                                                responseType: "stream",
-                                        });
-                                        const imageStream = imageResponse.data;
-
-                                        // Send the image as an attachment
-                                        const message = {
-                                                body: "",
-                                                attachment: imageStream,
-                                        };
-
-                                        api.sendMessage(message, event.threadID, event.messageID);
-                                } else {
-                                        api.sendMessage(
-                                                `No new images found for "${name}"`,
-                                                event.threadID,
-                                                event.messageID
-                                        );
-                                }
-                        } else {
-                                api.sendMessage(`No images found for "${name}"`, event.threadID, event.messageID);
-                        }
-                } catch (error) {
-                        console.error("Error:", error);
-                        // Handle errors here if necessary
+              // Find the first image that hasn't been sent before
+              let imageURL = null;
+              for (const image of images) {
+                if (!previousImages.has(image.link)) {
+                  imageURL = image.link;
+                  previousImages.add(image.link);
+                  break;
                 }
+              }
+
+              if (imageURL) {
+                // Fetch the image as a readable stream
+                const imageResponse = await axios.get(imageURL, {
+                  responseType: "stream",
+                });
+                const imageStream = imageResponse.data;
+
+                // Send the image as an attachment
+                const message = {
+                  body: "",
+                  attachment: imageStream,
+                };
+
+                api.sendMessage(message, event.threadID, event.messageID);
+              } else {
+                api.sendMessage(
+                  `No new images found for "${name}"`,
+                  event.threadID,
+                  event.messageID
+                );
+              }
+            } else {
+              api.sendMessage(`No images found for "${name}"`, event.threadID, event.messageID);
+            }
+          } catch (error) {
+            console.error("Error:", error);  
+          }
         }
-
-
 
 
 
 
         if (responseData.sing && responseData.sing !== "null") {
           try {
-            const searchResults = await ytSearch(responseData.sing);
+              const searchResults = await ytSearch(responseData.sing);
+              const video = searchResults.videos[0];
+              const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
 
-            const video = searchResults.videos[0];
-            const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
-            const stream = ytdl(videoUrl, { filter: 'audioonly' });
+              const filePath = __dirname + `/cache/music1.mp3`;
 
+              // Download the audio stream to a temporary file
+              const stream = ytdl(videoUrl, { filter: 'audioonly' });
+              await stream.pipe(fs.createWriteStream(filePath));
 
-            const fileName = 'music.mp3';
-            const filePath = __dirname + `/cache/${fileName}`;
+              // Wait for the stream to finish writing
+              await new Promise((resolve) => stream.on('end', resolve));
 
-            stream.pipe(fs.createWriteStream(filePath));
-
-            stream.on('end', () => {
+              // Check if the file exists before further operations
+              if (await fs.pathExists(filePath)) {
+                // The file exists, proceed with further operations
                 console.info('[DOWNLOADER] Downloaded');
 
-               if (fs.statSync(filePath).size > 26214400) {
-                fs.unlinkSync(filePath);
-                api.sendMessage('[ERR] The file could not be sent because it is larger than 25MB.', event.threadID);
-               }
+                if (fs.statSync(filePath).size > 26214400) {
+                  // Use fs-extra's remove to delete the file
+                  api.sendMessage('[ERR] The file could not be sent because it is larger than 25MB.', event.threadID);
 
-              const message = {
-                 body: ``,
-                 attachment: fs.createReadStream(filePath)
-               };
+                }
 
-              api.sendMessage(message, event.threadID, () => {
-                fs.unlinkSync(filePath);
-               });
-            });
+                // Send the file as an attachment
+                const message = {
+                  body: '',
+                  attachment: fs.createReadStream(filePath)
+                };
+
+                api.sendMessage(message, event.threadID, event.messageID);
+
+                // Delete the temporary file after sending
+
+              } else {
+                console.error('[ERROR] The file does not exist.');
+                api.sendMessage('[ERR] An error occurred while processing the command.', event.threadID);
+              }
           } catch (error) {
             console.error('[ERROR]', error);
             api.sendMessage('An error occurred while processing the command.', event.threadID);
           }
         }
 
-        if (responseData.gen && responseData.gen !== "null"){
+
+
+
+
+        // Assuming you have required libraries and initialized 'api' and 'fs' properly
+
+        if (responseData.gen && responseData.gen !== "null") {
           const prompt = responseData.gen;
-          const API = `https://suva-gen.onrender.com/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
-          const imageStream = await global.utils.getStreamFromURL(API);
-          api.sendMessage({ attachment: imageStream}, event.threadID);
-          /*return message.reply({
-            attachment: imageStream
-          });*/
+
+          const payload = {
+            width: 1024,
+            height: 1024,
+            prompt: `${prompt}, ultra detailed, animated film, realistic lights, cinematic, studio photo, vivid colors, realistic lights, cinematic, sharp focus, photorealistic concept art, perfect composition, soft natural volumetric, cinematic perfect light, rendered in unreal engine,detailed face,(hyperrealism:1.2), (photorealistic:1.2),Intricate, High Detail, dramatic, trending on artstation, ((trending on instagram)),shot with Canon EOS 5D Mark IV, detailed face, detailed hair`,
+            negative_prompt: "3d, Asian, cartoon, anime, sketches, (worst quality, bad quality, child, cropped:1.4), (watermark, signature, text, name:1.2), ((monochrome)), ((grayscale)), (bad-hands-5:1.0), (badhandv4:1.0), (easynegative:0.8), (bad-artist-anime:0.8), (bad-artist:0.8), (bad_prompt:0.8), (bad-picture-chill-75v:0.8), (bad_prompt_version2:0.8), (bad_quality:0.8),(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated hands and fingers:1.4), (deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation",
+            model: "revAnimated_v122.safetensors [3f4fefd9]"
+          };
+
+          const headers = {
+            accept: "application/json",
+            "content-type": "application/json",
+            "X-Prodia-Key": "a45721eb-840b-491f-8537-1b5c20ef818a"
+          };
+
+          try {
+            const response = await axios.post("https://api.prodia.com/v1/sd/generate", payload, { headers });
+
+            if (response.status === 200) {
+              const job_id = response.data.job;
+              console.log("Job ID:", job_id);
+
+              if (job_id) {
+                await new Promise(resolve => setTimeout(resolve, 9999));
+
+                const image_url = `https://images.prodia.xyz/${job_id}.png`;
+
+                try {
+                  // Get the image as a stream
+                  const imageStream = await axios.get(image_url, { responseType: 'stream' });
+
+                  // Send the image stream using 'api.sendMessage'
+
+                  api.sendMessage({ attachment: imageStream.data }, event.threadID, event.messageID);
+
+                  console.log('Image sent directly from URL');
+                } catch (error) {
+                  console.error(`Error fetching and sending image: ${error.message}`);
+                  // Handle the error as needed
+                }
+
+                } else {
+                  console.error(`Failed to generate image. Status code: ${response.status}`);
+                  // Handle the error as needed
+                }
+              }
+            } catch (error) {
+              console.error(`Error posting to API: ${error.message}`);
+              // Handle the error as needed
+            }
         }
+
+
+
 
         //console.log(responseData)
 
@@ -257,16 +322,57 @@ module.exports = {
 
           // Assuming 'data' contains the content from data.txt
           const chat = responseData.complement;
-          const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
+
+
+
+
+          const postData = {
+            messages: [{
+              id: '7MtDNeRId9MM6cIZh2hF8',
+              content: chat,
+              role: 'user',
+            }],
+            id: '7MtDNeRId9MM6cIZh2hF8',
+            previewToken: null,
+            userId: '87fa4c6a-99cc-4c98-9ca3-cb3edc6f3417',
+            codeModelMode: true,
+            agentMode: {
+              mode: true,
+              id: 'suvaaiYxGgidU',
+              name: 'suva ai',
+            },
+            trendingAgentMode: {},
+            isMicMode: false,
+            userSystemPrompt: null,
+            maxTokens: null,
+            webSearchMode: true,
+            promptUrls: null,
+            isChromeExt: false,
+          };
+
+          const apiUrl = 'https://www.blackbox.ai/api/chat';
+
+          const ans = await axios.post(apiUrl, postData, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+
+
+
+
+
+          //const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
           //isVoiceEnabled = await threadsData.get(event.threadID, "settings.voice");
 
           if (voice) {
-            const prompt = ans.data.result;
-            const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(prompt)}`;
+
+            const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(ans.data)}`;
             const VoiceStream = await global.utils.getStreamFromURL(API);
-            api.sendMessage({ attachment: VoiceStream}, event.threadID);
+            api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
           } else {
-            api.sendMessage(ans.data.result, event.threadID);
+            api.sendMessage(ans.data, event.threadID, event.messageID);
           }
 
           /*const encodedComplement = encodeURIComponent(responseData.complement);
@@ -279,6 +385,7 @@ module.exports = {
             return message.reply(getLang("chatting"));
           }*/
         }
+
 
 
 
@@ -306,12 +413,10 @@ module.exports = {
 
                   const fs = require('fs');
                   const ytdl = require('ytdl-core');
-                  const cacheDirectory = './cache'; // Change this to your cache directory
+                  const cacheDirectory = 'cache'; // Change this to your cache directory
 
                   // Ensure the cache directory exists
-                  if (!fs.existsSync(cacheDirectory)) {
-                    fs.mkdirSync(cacheDirectory);
-                  }
+
 
                   console.log('Downloading ..... ');
 
@@ -339,7 +444,7 @@ module.exports = {
                       api.sendMessage({
                         body: '',
                         attachment: videoReadStream,
-                      }, event.threadID);
+                      }, event.threadID, event.messageID);
 
                       // Optionally, you can delete the downloaded file after sending
 
@@ -371,4 +476,3 @@ module.exports = {
     }
   },
 };
-      
