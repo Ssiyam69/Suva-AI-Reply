@@ -113,7 +113,7 @@ module.exports = {
         userMSG = args.join(" ");
       }
 
-      //const filtertxt = fs.readFileSync('filter.txt', 'utf8');
+      const filtertxt = fs.readFileSync('filter.txt', 'utf8');
       const userMessage = `${userMSG}`;
 
 
@@ -122,13 +122,6 @@ module.exports = {
         const response = await axios.get(`https://ntf-chat-filter.onrender.com/filter?key=sudiptoisgay&prompt=${encodeURIComponent(userMessage.replace(/\n/g, " "))}`);
         const responseData = JSON.parse(response.data.result);
         console.log(responseData);
-       
-
-
-
-
-
-
 
 
         /*if (responseData.gk && responseData.gk !== "null"){
@@ -318,61 +311,37 @@ module.exports = {
 
 
         if (responseData.complement && responseData.complement !== "null") {
-
-
-          // Assuming 'data' contains the content from data.txt
-          const chat = responseData.complement;
-
-
-
-
-          const postData = {
+          const prompt = responseData.complement;
+          const requestBody = {
             messages: [{
-              id: '7MtDNeRId9MM6cIZh2hF8',
-              content: chat,
-              role: 'user',
-            }],
-            id: '7MtDNeRId9MM6cIZh2hF8',
-            previewToken: null,
-            userId: '87fa4c6a-99cc-4c98-9ca3-cb3edc6f3417',
-            codeModelMode: true,
-            agentMode: {
-              mode: true,
-              id: 'suvaaiYxGgidU',
-              name: 'suva ai',
-            },
-            trendingAgentMode: {},
-            isMicMode: false,
-            userSystemPrompt: null,
-            maxTokens: null,
-            webSearchMode: true,
-            promptUrls: null,
-            isChromeExt: false,
+              content: `"${prompt}"`,
+              role: "user"
+            }]
           };
 
-          const apiUrl = 'https://www.blackbox.ai/api/chat';
+          const response = await axios.post(
+            'https://app.fastbots.ai/api/bots/clt2pr1df00jlswb3ot45lswt/ask',
+            requestBody,
+            {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          );
 
-          const ans = await axios.post(apiUrl, postData, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-
-
-
-
+          // Handle the response data
+          const ans = response.data;
 
           //const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
           //isVoiceEnabled = await threadsData.get(event.threadID, "settings.voice");
 
           if (voice) {
 
-            const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(ans.data)}`;
+            const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(ans)}`;
             const VoiceStream = await global.utils.getStreamFromURL(API);
             api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
           } else {
-            api.sendMessage(ans.data, event.threadID, event.messageID);
+            api.sendMessage(ans, event.threadID, event.messageID);
           }
 
           /*const encodedComplement = encodeURIComponent(responseData.complement);
