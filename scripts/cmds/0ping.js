@@ -20,6 +20,6 @@ module.exports = {
     const timeStart = Date.now();
     await api.sendMessage("🏓", event.threadID);
     const ping = Date.now() - timeStart;
-    api.sendMessage(`Pong:${ping}ms;🏓`, event.threadID);
+    api.sendMessage(`Pong ${ping}ms 🏓`, event.threadID);
   }
 };
