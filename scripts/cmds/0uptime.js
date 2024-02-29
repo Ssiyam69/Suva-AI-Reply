@@ -44,6 +44,6 @@ module.exports = {
     const ping = Date.now() - event.timestamp;
 
     // Send message containing bot's uptime, OS information, RAM information, and ping with one line gap
-    api.sendMessage(`Suva has been running for ${uptimeString} 🏃‍♀️\n\n${osInfo}\n\n${ramInfo}\n\n   🌸 Suva AI 🌸  `, event.threadID);
+    api.sendMessage(`Suva has been running for ${uptimeString} 🏃‍♀️\n\n${osInfo}\n\n${ramInfo}\n\n               🌸 Suva AI 🌸`, event.threadID);
   }
 };
