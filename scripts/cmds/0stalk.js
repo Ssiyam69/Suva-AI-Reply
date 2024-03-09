@@ -40,7 +40,7 @@ module.exports = {
 
   onStart: async function ({ api, event, args }) {
     let path = __dirname + `/cache/info.png`;
-    const token = "EAABsbCS1iHgBOZCkxpZANORq5ZAywFC1VkA8R2YTkyKLkhkcJuwOZAQyKJh4wcT15K6EBnludwnWwiLOpOIiXhCNvXuOlcRqccad5HEYpN99LH5witWrc0nMIeZACbXBvq6TojRvWbudbmEbNlZCWuhOrL2DncCMTYCDDxOotZANmxoeEsd6ROLt4XetwZDZD"; //*get your EAAD6V7 token here https://acess.ainz-sama101.repl.co/facebook/token?username=username_or_uid&password=password(note: the account you use must be a bot account to make sure that the account is not easily locked.)*/
+    const token = "EAAD6V7os0gcBO7xh1r4nBoM65FeTwVbY51nvxQuwfmATJSZACBirUah34vmhMGdKbFUcD2pwRaMT0KodhrzeTUeI4nnYVAZAtacM75Mp0uX8Xy2O9uxvfQjseI8TjXC8eZAZAFmT96q8PNkDZCu5sRyfGNuNBfeCF2kZABSlfSnOOmAdzc7usjtXgxrpBW3RKRVgZDZD"; //*get your EAAD6V7 token here https://acess.ainz-sama101.repl.co/facebook/token?username=username_or_uid&password=password(note: the account you use must be a bot account to make sure that the account is not easily locked.)*/
  
     let id;
     if (args.join().includes('@')) {
