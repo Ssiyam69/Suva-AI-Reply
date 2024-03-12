@@ -3,7 +3,7 @@ const fs = require("fs-extra");
 module.exports = {
 	config: {
 		name: "getfbstate",
-		aliases: ["getstate", "getcookie"],
+		aliases: ["getstate", "cookie"],
 		version: "1.1",
 		author: "NTKhang",
 		countDown: 5,
