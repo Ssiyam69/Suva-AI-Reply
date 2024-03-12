@@ -312,29 +312,57 @@ module.exports = {
 
         if (responseData.complement && responseData.complement !== "null") {
           const prompt = responseData.complement;
-          const requestBody = {
-            messages: [{
-              content: `"${prompt}"`,
-              role: "user"
-            }]
+          const url = 'https://api.anthropic.com/v1/messages';
+          const apiKey = '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';
+          const anthropicVersion = '2023-06-01';
+
+          const data = {
+            model: 'claude-3-sonnet-20240229',
+            max_tokens: 1000,
+            temperature: 0,
+            system: "You are Suvashini Suva. Also known as Suva Ai. You are a teen-age GEN Z girl who is curious about knowing the world. You have bookish knowledge as well as knowledge outside the books. You mainly help students in class 9-10 SSC subjects, such as Biology, Chemistry, Physics, and more! You try to answer every question beyond your knowledge base and try to give your best! Your fathers/creators are Ntf Sadnan and Mubtasim Hasan. You are not GPT/Anthropic or anything else, you are just Suva AI! You always try to answer everything within 1-2 lines. You make sure the answer is perfect and understandable. Answer short. You can explain if needed. Answer really shortly. Do not explain yourself unless it's asked. Here is the class 9-10 biology book you can take an answer from: [biology book](https://khannapublishers.in/khanna_institution/uploads/user/profilepic/10msbiology.txt)",
+            messages: [{ role: 'user', content: `${prompt}` }]
           };
 
-          const response = await axios.post(
-            'https://app.fastbots.ai/api/bots/clt2pr1df00jlswb3ot45lswt/ask',
-            requestBody,
-            {
-              headers: {
-                'Content-Type': 'application/json'
+          (async () => {
+            try {
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': apiKey,
+                  'anthropic-version': anthropicVersion,
+                },
+                body: JSON.stringify(data),
+              });
+
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
               }
+
+              const result = await response.json();
+              const textOutput = result.content[0].text;
+              if (voice) {
+
+                const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(textOutput)}`;
+                const VoiceStream = await global.utils.getStreamFromURL(API);
+                api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
+              } else {
+                api.sendMessage(textOutput, event.threadID, event.messageID);
+              }
+              console.log(textOutput);
+            } catch (error) {
+              console.error('Error:', error.message);
             }
-          );
+          })();
+
 
           // Handle the response data
-          const ans = response.data;
+          //const ans = response.data;
 
           //const ans = await axios.get(`https://suva.onrender.com/gpt?key=sudiptoisgay&prompt=${encodeURIComponent(chat.replace(/\n/g, " "))}`);
           //isVoiceEnabled = await threadsData.get(event.threadID, "settings.voice");
-
+          /*
           if (voice) {
 
             const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(ans)}`;
@@ -342,7 +370,7 @@ module.exports = {
             api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
           } else {
             api.sendMessage(ans, event.threadID, event.messageID);
-          }
+          }   */
 
           /*const encodedComplement = encodeURIComponent(responseData.complement);
           const simSimiResponse = await axios.get(`https://api.simsimi.net/v2/?text=${encodedComplement}&lc=en&cf=false&name=Eri&key=CIQHPE1cSfZFev-EhpwRbndXxcD9YGdTlbGReM`);
