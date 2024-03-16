@@ -79,7 +79,7 @@ module.exports = {
             // Fetch response using transcriptionUrl and set userMSG to the fetched content
             console.log('ping2');
             const response = await axios.get(transcriptionUrl);
-            userMSG = response.data.text;
+            userMSG = response.data.words;
           } catch (error) {
             console.error('Error fetching transcription:', error);
             // Handle errors here if necessary
