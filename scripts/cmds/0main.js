@@ -102,7 +102,7 @@ module.exports = {
             const uriatturl = encodeURIComponent(replyAttachment.url);
             const imgprompt = args.join(" ");
             console.log(imgprompt);
-            const visionUrl = `https://suva-vision.onrender.com/vision?key=sudiptoisgay&prompt=${imgprompt}&url=${uriatturl}`;
+            const visionUrl = `https://suva-vision.onrender.com/vision?prompt=${imgprompt}&url=${uriatturl}`;
             const response = await axios.get(visionUrl);
             api.sendMessage(response.data.result, event.threadID, event.messageID);
 
