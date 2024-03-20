@@ -359,7 +359,7 @@ REMEMBER TO GIVE SIMPLE GRAMMATICAL LANGUAGE ANSWERS`,
               const textOutput = result.content[0].text;
               if (voice) {
 
-                const API = `https://kind-underwear-ox.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(textOutput)}`;
+                const API = `https://jade-clever-sockeye.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(textOutput)}`;
                 const VoiceStream = await global.utils.getStreamFromURL(API);
                 api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
               } else {
