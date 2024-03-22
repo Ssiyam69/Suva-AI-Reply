@@ -3,6 +3,7 @@ const ytdl = require('ytdl-core');
 const ytSearch = require("yt-search")
 const fs = require('fs-extra');
 const fetch = require('node-fetch');
+const stream = require('stream');
 
 
 const previousImages = new Set();
@@ -357,11 +358,31 @@ REMEMBER TO GIVE SIMPLE GRAMMATICAL LANGUAGE ANSWERS`,
 
               const result = await response.json();
               const textOutput = result.content[0].text;
-              if (voice) {
+              
 
-                const API = `https://drab-ruby-earthworm-wig.cyclic.app/generate?key=sudiptoisgay&prompt=${encodeURIComponent(textOutput)}`;
-                const VoiceStream = await global.utils.getStreamFromURL(API);
-                api.sendMessage({ attachment: VoiceStream}, event.threadID, event.messageID);
+              if (voice) {
+                  
+                  const apiKey = "765ff544a7378394b1434d6ca54ab24a" ;
+                  const url = "https://api.elevenlabs.io/v1/text-to-speech/zrHiDhphv9ZnVXBqCLjz";
+              
+                  axios.post(url, {
+                      text: textOutput
+                  }, {
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'xi-api-key': apiKey
+                      },
+                      responseType: 'stream'
+                  })
+                  .then(response => {
+                      // Assuming `api` is your method to send messages
+                      api.sendMessage({ attachment: response.data }, event.threadID, event.messageID);
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                  });
+              
+
               } else {
                 api.sendMessage(textOutput, event.threadID, event.messageID);
               }
