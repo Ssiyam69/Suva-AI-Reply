@@ -199,60 +199,44 @@ module.exports = {
 
         if (responseData.sing && responseData.sing !== "null") {
           try {
-            const searchResults = await ytSearch(responseData.sing);
-            const video = searchResults.videos[0];
-        
-            // Check if the video exists
-            if (!video) {
-              console.error('[ERROR] No video found.');
-              api.sendMessage('[ERR] No video found for the given query.', event.threadID);
-              return;
-            }
-        
-            const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
-        
-            // Generate a unique file name
-            const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.mp3`;
-            const filePath = `${__dirname}/cache/${uniqueFileName}`;
-        
-            // Download the audio stream to a temporary file
-            const stream = ytdl(videoUrl, { filter: 'audioonly' });
-            await stream.pipe(fs.createWriteStream(filePath));
-        
-            // Wait for the stream to finish writing
-            await new Promise((resolve) => stream.on('end', resolve));
-        
-            // Check if the file exists before further operations
-            if (await fs.pathExists(filePath)) {
-              // The file exists, proceed with further operations
-              console.info('[DOWNLOADER] Downloaded');
-        
-              if (fs.statSync(filePath).size > 26214400) {
-                // Use fs-extra's remove to delete the file
-                api.sendMessage('[ERR] The file could not be sent because it is larger than 25MB.', event.threadID);
-              } else {
+              const searchResults = await ytSearch(responseData.sing);
+              const video = searchResults.videos[0];
+              const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
+
+              const filePath = __dirname + `/cache/music1.mp3`;
+
+              // Download the audio stream to a temporary file
+              const stream = ytdl(videoUrl, { filter: 'audioonly' });
+              await stream.pipe(fs.createWriteStream(filePath));
+
+              // Wait for the stream to finish writing
+              await new Promise((resolve) => stream.on('end', resolve));
+
+              // Check if the file exists before further operations
+              if (await fs.pathExists(filePath)) {
+                // The file exists, proceed with further operations
+                console.info('[DOWNLOADER] Downloaded');
+
+                if (fs.statSync(filePath).size > 26214400) {
+                  // Use fs-extra's remove to delete the file
+                  api.sendMessage('[ERR] The file could not be sent because it is larger than 25MB.', event.threadID);
+
+                }
+
                 // Send the file as an attachment
                 const message = {
                   body: '',
                   attachment: fs.createReadStream(filePath)
                 };
+
                 api.sendMessage(message, event.threadID, event.messageID);
-        
-                // Delete the temporary file after 30 seconds
-                setTimeout(() => {
-                  fs.unlink(filePath, (err) => {
-                    if (err) {
-                      console.error(`[ERROR] Failed to delete file: ${filePath}`, err);
-                    } else {
-                      console.log(`[DOWNLOADER] Deleted file: ${filePath}`);
-                    }
-                  });
-                }, 30000); // 30 seconds = 30000 milliseconds
+
+                // Delete the temporary file after sending
+
+              } else {
+                console.error('[ERROR] The file does not exist.');
+                api.sendMessage('[ERR] An error occurred while processing the command.', event.threadID);
               }
-            } else {
-              console.error('[ERROR] The file does not exist.');
-              api.sendMessage('[ERR] An error occurred while processing the command.', event.threadID);
-            }
           } catch (error) {
             console.error('[ERROR]', error);
             api.sendMessage('An error occurred while processing the command.', event.threadID);
@@ -436,92 +420,86 @@ REMEMBER TO GIVE SIMPLE GRAMMATICAL LANGUAGE ANSWERS`,
         }
 
 
+
+
+
         if (responseData.video && responseData.video !== "null") {
           const query = responseData.video;
           try {
-              const apiKey = 'AIzaSyBCsuQ6EFUCR22TqRYAQWewMCCUyMxONQc';
-              const searchApiUrl = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&q=${query}&part=snippet&type=video`;
-      
-              fetch(searchApiUrl)
-                  .then(response => response.json())
-                  .then(async data => {
-                      const videos = data.items;
-      
-                      if (videos.length > 0) {
-                          const firstVideoId = videos[0].id.videoId;
-                          console.log(firstVideoId);
-      
-                          const youtubeLink = `https://www.youtube.com/watch?v=${firstVideoId}`;
-                          const fs = require('fs');
-                          const ytdl = require('ytdl-core');
-                          const cacheDirectory = 'cache'; // Change this to your cache directory
-      
-                          
-      
-                          console.log('Downloading ..... ');
-      
-                          const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.mp4`;
-                          const outputFilePath = `${cacheDirectory}/${uniqueFileName}`;
-      
-                          const videoStream = ytdl(youtubeLink, { quality: 'lowest' });
-                          const fileStream = fs.createWriteStream(outputFilePath);
-      
-                          videoStream.pipe(fileStream);
-      
-                          fileStream.on('finish', () => {
-                              console.log('Download complete.');
-      
-                              const videoReadStream = fs.createReadStream(outputFilePath);
-      
-                              if (fs.existsSync(outputFilePath)) {
-                                  api.sendMessage({
-                                      body: '',
-                                      attachment: videoReadStream,
-                                  }, event.threadID, event.messageID);
-      
-                                  setTimeout(() => {
-                                      fs.unlink(outputFilePath, err => {
-                                          if (err) {
-                                              console.error('Error deleting file:', err);
-                                          } else {
-                                              console.log('File deleted successfully:', outputFilePath);
-                                          }
-                                      });
-                                  }, 30000); // 30 seconds
-                              } else {
-                                  console.error(`File not found: ${outputFilePath}`);
-                              }
-                          });
-      
-                          fileStream.on('error', (error) => {
-                              console.error('Error:', error);
-                          });
-                      } else {
-                          console.log('No videos found for the query.');
-                          api.sendMessage('No videos found for the given query.', event.threadID);
-                      }
-                  })
-                  .catch(error => {
-                      console.error('Error:', error);
-                      api.sendMessage('An error occurred while fetching videos.', event.threadID);
+            const apiKey = 'AIzaSyBCsuQ6EFUCR22TqRYAQWewMCCUyMxONQc';
+            const searchApiUrl = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&q=${query}&part=snippet&type=video`;
+
+            fetch(searchApiUrl)
+              .then(response => response.json())
+              .then(data => {
+                // Handle the response data (list of videos)
+                const videos = data.items;
+
+                // Check if there are any videos in the response
+                if (videos.length > 0) {
+                  // Grab the videoId of the first video
+                  const firstVideoId = videos[0].id.videoId;
+                  console.log('First Video ID:', firstVideoId);
+
+                  // Use the videoId in the second part of the script
+                  const youtubeLink = `https://www.youtube.com/watch?v=${firstVideoId}`;
+
+                  const fs = require('fs');
+                  const ytdl = require('ytdl-core');
+                  const cacheDirectory = 'cache'; // Change this to your cache directory
+
+                  // Ensure the cache directory exists
+
+
+                  console.log('Downloading ..... ');
+
+                  // Specify format options to include both video and audio with a specific quality (480p)
+                  const options = {
+                    quality: 'lowest', // Choose the lowest quality available (480p)
+                    filter: 'audioandvideo', // Include both audio and video streams
+                  };
+
+                  const outputFilePath = `${cacheDirectory}/output.mp4`;
+
+                  const videoStream = ytdl(youtubeLink, options);
+                  const fileStream = fs.createWriteStream(outputFilePath);
+
+                  videoStream.pipe(fileStream);
+
+                  fileStream.on('finish', () => {
+                    console.log('Download complete.');
+
+                    // Now that the video is downloaded, send the message with the attached video stream
+                    const videoReadStream = fs.createReadStream(outputFilePath);
+
+                    // Check if the file exists before attempting to send
+                    if (fs.existsSync(outputFilePath)) {
+                      api.sendMessage({
+                        body: '',
+                        attachment: videoReadStream,
+                      }, event.threadID, event.messageID);
+
+                      // Optionally, you can delete the downloaded file after sending
+
+                    } else {
+                      console.error(`File not found: ${outputFilePath}`);
+                    }
                   });
+
+                  fileStream.on('error', (error) => {
+                    console.error('Error:', error);
+                  });
+                } else {
+                  console.log('No videos found for the query.');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+
           } catch (error) {
-              console.error(error);
-              api.sendMessage('An error occurred while fetching videos!', event.threadID, event.messageID);
+            console.error(error);
+            return api.sendMessage("An error occurred while fetching lyrics!", event.threadID, event.messageID);
           }
-      }
-      
-      
-
-        
-        
-        
-
-
-        
-
-
-        
+        }
 
 
       } catch (error) {
