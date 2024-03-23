@@ -456,9 +456,7 @@ REMEMBER TO GIVE SIMPLE GRAMMATICAL LANGUAGE ANSWERS`,
                           const ytdl = require('ytdl-core');
                           const cacheDirectory = 'cache'; // Change this to your cache directory
       
-                          if (!fs.existsSync(cacheDirectory)) {
-                              fs.mkdirSync(cacheDirectory);
-                          }
+                          
       
                           console.log('Downloading ..... ');
       
