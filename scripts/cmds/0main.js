@@ -314,7 +314,7 @@ module.exports = {
         if (responseData.complement && responseData.complement !== "null") {
           const prompt = responseData.complement;
           const url = 'https://api.anthropic.com/v1/messages';
-          const apiKey = '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';
+          const apiKey = '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';
           const anthropicVersion = '2023-06-01';
 
           const data = {
