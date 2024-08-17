@@ -34,7 +34,7 @@ module.exports = {
 			turnedOn: 'Turned on sam successfully!',
 			turnedOff: 'Turned off sam successfully!',
 			chatting: 'Already Chatting with sam...',
-			error: 'What?🙂'
+			error: 'Fuck you 🫦'
 		}
 	},
 
