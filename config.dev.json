@@ -1,7 +1,7 @@
 {
   "facebookAccount": {
-    "email": "suvashinoves69@gmail.com",
-    "password": "sa",
+    "email": "siam1020u@gmail.com",
+    "password": "Siam1020",
     "2FASecret": "",
     "i_user": "",
     "proxy": null,
@@ -17,9 +17,9 @@
     "ignoreCommand": []
   },
   "adminBot": [
-    "100049273263261",
-    "100035530456587",
-    "100057434659259",
+    "100044530383890",
+    "",
+    "",
     "",
     ""
   ],
@@ -28,7 +28,7 @@
     "whiteListIds": [""],
     "notes": "if you enable this feature, only the ids in the whiteListIds section can use the bot"
   },
-  "nickNameBot": "SuvaAI",
+  "nickNameBot": "FLAME BOT ",
   "prefix": ".",
   "database": {
     "type": "mongodb",
